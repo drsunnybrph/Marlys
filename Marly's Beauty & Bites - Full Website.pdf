@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marly's Beauty & Bites | Tulsa, OK</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9922A;--gold2:#E8B84B;--gold3:#FFF0CC;--gold4:#FFF8E8;--gold-dark:#8B6010;
+  --col-y:#FCD116;--col-b:#003893;--col-r:#CE1126;
+  --dark:#0D0A06;--dark2:#1A1208;--dark3:#261A0A;
+  --brown:#3D2810;--brown2:#5C3D18;
+  --cream:#FAF6F0;--ivory:#FFF9F2;--white:#FFFFFF;
+  --gray:#8A7A6A;--gray2:#B8A898;--gray4:#EDE8E0;
+  --rose:#F9E8EC;--rose2:#E8B8C4;
+  --shadow:0 4px 24px rgba(13,10,6,.12);
+  --shadow2:0 16px 56px rgba(13,10,6,.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--dark);overflow-x:hidden;}
+
+/* ── NAVBAR ── */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:68px;background:rgba(13,10,6,.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,146,42,.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;color:var(--gold2);cursor:pointer;letter-spacing:.5px;}
+.nav-brand span{color:var(--white);font-style:normal;}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-btn{background:none;border:none;color:rgba(255,255,255,.65);font-size:.8rem;font-weight:500;cursor:pointer;padding:7px 13px;border-radius:6px;transition:all .2s;font-family:'Inter',sans-serif;white-space:nowrap;}
+.nav-btn:hover{color:var(--gold2);background:rgba(201,146,42,.08);}
+.nav-lang{background:rgba(201,146,42,.12)!important;border:1px solid rgba(201,146,42,.25)!important;color:var(--gold2)!important;border-radius:50px!important;padding:6px 14px!important;font-size:.75rem!important;font-weight:600!important;}
+.nav-cart{background:linear-gradient(135deg,var(--gold),var(--gold2))!important;color:var(--dark)!important;border-radius:50px!important;font-weight:700!important;padding:7px 18px!important;position:relative;}
+.cart-badge{position:absolute;top:-7px;right:-7px;background:var(--col-r);color:white;font-size:.6rem;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;}
+.cart-badge.show{display:flex;}
+.hamburger{display:none;background:none;border:none;color:var(--gold2);font-size:1.3rem;cursor:pointer;}
+
+/* ── CART DRAWER ── */
+.cart-overlay{position:fixed;inset:0;background:rgba(13,10,6,.6);z-index:400;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);}
+.cart-overlay.open{opacity:1;pointer-events:all;}
+.cart-drawer{position:fixed;top:0;right:-440px;width:min(440px,100vw);height:100vh;background:var(--ivory);z-index:500;transition:right .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-8px 0 60px rgba(13,10,6,.3);}
+.cart-drawer.open{right:0;}
+.cart-head{background:linear-gradient(135deg,var(--dark2),var(--dark3));padding:22px 24px;display:flex;align-items:center;justify-content:space-between;}
+.cart-head h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold2);font-style:italic;}
+.cart-close{background:rgba(255,255,255,.1);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.cart-close:hover{background:rgba(255,255,255,.2);}
+.col-stripe{display:flex;height:3px;}
+.col-stripe span{flex:1;}
+.cart-body{flex:1;overflow-y:auto;padding:16px;}
+.cart-empty{text-align:center;padding:56px 20px;color:var(--gray2);}
+.cart-empty i{font-size:2.5rem;color:var(--gold);opacity:.4;display:block;margin-bottom:12px;}
+.cart-item{display:flex;align-items:center;gap:12px;padding:14px;background:var(--white);border-radius:14px;margin-bottom:10px;border:1px solid var(--gray4);box-shadow:0 2px 8px rgba(13,10,6,.04);}
+.cart-item-icon{width:42px;height:42px;background:var(--gold4);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--gold-dark);font-size:1rem;flex-shrink:0;}
+.cart-item-info{flex:1;}
+.cart-item-name{font-weight:600;font-size:.87rem;color:var(--dark);}
+.cart-item-price{font-size:.76rem;color:var(--gray);margin-top:2px;}
+.cart-qty{display:flex;align-items:center;gap:8px;}
+.qty-btn{background:var(--dark);color:white;border:none;width:24px;height:24px;border-radius:50%;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.qty-btn:hover{background:var(--gold-dark);}
+.qty-n{font-weight:700;font-size:.88rem;min-width:18px;text-align:center;}
+.rm-btn{background:none;border:none;color:var(--gray2);cursor:pointer;padding:3px;transition:color .2s;}
+.rm-btn:hover{color:var(--col-r);}
+.cart-foot{padding:20px 24px;border-top:1px solid var(--gray4);background:var(--white);}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding:14px 16px;background:var(--gold4);border-radius:12px;border:1px solid rgba(201,146,42,.2);}
+.cart-total-row span{font-weight:600;font-size:.9rem;color:var(--brown);}
+.cart-total-amt{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--gold-dark);}
+.pay-label{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:10px;}
+.pay-btns{display:flex;flex-direction:column;gap:8px;}
+.pay-btn-cart{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:50px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;color:white;transition:all .2s;font-family:'Inter',sans-serif;}
+.pay-btn-cart:hover{transform:translateY(-1px);opacity:.92;}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:linear-gradient(160deg,var(--dark) 0%,var(--dark2) 35%,#1A0D04 65%,var(--dark3) 100%);position:relative;overflow:hidden;display:flex;align-items:center;padding:80px 48px 60px;}
+.hero-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(201,146,42,.08) 1px,transparent 1px);background-size:40px 40px;}
+.hero-glow{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(201,146,42,.07),transparent 70%);top:-200px;right:-150px;pointer-events:none;}
+.hero-glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(206,17,38,.05),transparent 70%);bottom:-100px;left:25%;pointer-events:none;}
+.hero-content{position:relative;z-index:2;max-width:700px;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;background:rgba(201,146,42,.1);border:1px solid rgba(201,146,42,.25);color:var(--gold2);font-size:.7rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;padding:7px 18px;border-radius:50px;margin-bottom:24px;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,7vw,6rem);color:var(--white);line-height:1.0;font-weight:600;margin-bottom:12px;}
+.hero h1 em{color:var(--gold2);font-style:italic;display:block;}
+.hero-divider{display:flex;align-items:center;gap:14px;margin:18px 0;}
+.hero-divider span{height:1px;width:48px;background:linear-gradient(90deg,transparent,rgba(201,146,42,.4));}
+.hero-divider span:last-child{background:linear-gradient(90deg,rgba(201,146,42,.4),transparent);}
+.hero-divider i{color:var(--gold2);font-size:.9rem;}
+.hero-sub{color:rgba(255,255,255,.6);font-size:.95rem;line-height:1.75;max-width:480px;margin-bottom:10px;letter-spacing:.3px;}
+.hero-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold2);font-size:1.2rem;margin-bottom:36px;opacity:.85;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;border-radius:50px;padding:14px 32px;font-size:.9rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s;box-shadow:0 8px 28px rgba(201,146,42,.3);font-family:'Inter',sans-serif;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(201,146,42,.4);}
+.btn-outline-gold{background:transparent;color:var(--gold2);border:1.5px solid rgba(201,146,42,.4);border-radius:50px;padding:13px 28px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:8px;}
+.btn-outline-gold:hover{background:rgba(201,146,42,.08);border-color:var(--gold2);}
+.hero-features{display:flex;gap:24px;margin-top:48px;flex-wrap:wrap;}
+.hero-feat{display:flex;align-items:center;gap:10px;}
+.hero-feat i{color:var(--gold2);font-size:.85rem;}
+.hero-feat span{font-size:.78rem;color:rgba(255,255,255,.5);letter-spacing:.5px;text-transform:uppercase;}
+.hero-flag{position:absolute;bottom:0;left:0;right:0;display:flex;height:4px;}
+.hero-flag span{flex:1;}
+
+/* ── SECTIONS ── */
+section{padding:88px 40px;}
+.container{max-width:1120px;margin:0 auto;}
+.container-sm{max-width:760px;margin:0 auto;}
+.eyebrow{font-size:.68rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:600;color:var(--dark);line-height:1.15;margin-bottom:10px;}
+.section-title em{color:var(--col-b);font-style:italic;}
+.section-sub{color:var(--gray);font-size:.9rem;line-height:1.8;max-width:500px;}
+.center{text-align:center;}
+.center .section-sub{margin:0 auto 52px;}
+.gold-rule{display:flex;align-items:center;justify-content:center;gap:16px;margin:20px 0 48px;}
+.gold-rule span{height:1px;width:60px;background:linear-gradient(90deg,transparent,var(--gold));}
+.gold-rule span:last-child{background:linear-gradient(90deg,var(--gold),transparent);}
+.gold-rule i{color:var(--gold);font-size:.8rem;}
+
+/* ── SERVICE CARDS ── */
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px;margin-top:0;}
+.svc-card{background:var(--white);border-radius:24px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--gray4);transition:all .35s;}
+.svc-card:hover{transform:translateY(-8px);box-shadow:var(--shadow2);}
+.svc-card-head{padding:28px 28px 22px;position:relative;overflow:hidden;}
+.svc-card-head.nails{background:linear-gradient(135deg,#001A5C,var(--col-b));}
+.svc-card-head.braids{background:linear-gradient(135deg,#6B0010,var(--col-r));}
+.svc-card-head.snacks{background:linear-gradient(135deg,#8B6A00,#C49A00);}
+.svc-card-head::after{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);}
+.svc-icon-wrap{width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:white;font-size:1.3rem;margin-bottom:14px;}
+.svc-card-head h3{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-style:italic;margin-bottom:4px;}
+.nails h3,.braids h3{color:var(--col-y);}
+.snacks h3{color:var(--white);}
+.svc-card-head p{font-size:.76rem;opacity:.65;color:white;letter-spacing:.5px;}
+.svc-body{padding:24px 28px;}
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed rgba(13,10,6,.07);}
+.price-row:last-of-type{border-bottom:none;}
+.price-info{flex:1;}
+.price-name{font-size:.87rem;color:var(--dark);font-weight:500;}
+.price-name small{display:block;color:var(--gray);font-size:.72rem;font-weight:400;margin-top:1px;}
+.price-right{display:flex;align-items:center;gap:10px;}
+.price-tag{font-size:.76rem;font-weight:700;padding:4px 12px;border-radius:50px;white-space:nowrap;color:white;}
+.pt-b{background:linear-gradient(135deg,var(--col-b),#0050CC);}
+.pt-r{background:linear-gradient(135deg,var(--col-r),#FF3050);}
+.pt-g{background:linear-gradient(135deg,#8B6A00,#C49A00);}
+.add-btn{background:none;border:1.5px solid;border-radius:50px;font-size:.7rem;font-weight:700;cursor:pointer;padding:4px 12px;transition:all .2s;font-family:'Inter',sans-serif;white-space:nowrap;}
+.add-btn.ab{color:var(--col-b);border-color:var(--col-b);}
+.add-btn.ab:hover{background:var(--col-b);color:white;}
+.add-btn.ar{color:var(--col-r);border-color:var(--col-r);}
+.add-btn.ar:hover{background:var(--col-r);color:white;}
+.add-btn.ag{color:#8B6A00;border-color:#8B6A00;}
+.add-btn.ag:hover{background:#8B6A00;color:white;}
+.svc-pay-note{background:var(--gold4);border-left:3px solid var(--gold);border-radius:10px;padding:11px 14px;margin-top:16px;font-size:.76rem;color:var(--brown);line-height:1.6;display:flex;gap:8px;align-items:flex-start;}
+.svc-pay-note i{color:var(--gold-dark);flex-shrink:0;margin-top:2px;}
+.svc-cta{display:flex;gap:8px;margin-top:14px;}
+.svc-cta-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 12px;border-radius:50px;font-size:.78rem;font-weight:700;color:white;border:none;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;}
+.svc-cta-btn:hover{transform:translateY(-1px);opacity:.9;}
+
+/* ── ABOUT ── */
+.about-wrap{display:grid;grid-template-columns:1fr 1fr;border-radius:28px;overflow:hidden;box-shadow:var(--shadow2);max-width:1000px;margin:0 auto;}
+.about-photo{position:relative;min-height:560px;background:linear-gradient(135deg,var(--dark2),var(--dark3));display:flex;align-items:center;justify-content:center;}
+.about-photo-placeholder{text-align:center;color:rgba(255,255,255,.2);}
+.about-photo-placeholder i{font-size:5rem;display:block;margin-bottom:16px;}
+.about-photo-placeholder p{font-size:.8rem;letter-spacing:1px;text-transform:uppercase;}
+.about-flag-tag{position:absolute;bottom:24px;left:24px;background:rgba(0,56,147,.85);backdrop-filter:blur(8px);color:white;font-size:.72rem;font-weight:600;padding:8px 16px;border-radius:50px;display:flex;align-items:center;gap:8px;}
+.about-flag-tag i{color:var(--col-y);}
+.about-text-panel{background:var(--white);padding:52px 44px;display:flex;flex-direction:column;justify-content:center;}
+.about-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;}
+.abadge{font-size:.68rem;font-weight:700;padding:4px 12px;border-radius:50px;letter-spacing:.5px;}
+.ab-gold{background:var(--gold4);color:var(--gold-dark);}
+.ab-blue{background:#E8EEFF;color:var(--col-b);}
+.ab-red{background:#FFE8EC;color:var(--col-r);}
+.about-text-panel .section-title em{color:var(--gold-dark);}
+.about-text-panel p{font-size:.9rem;color:var(--gray);line-height:1.82;margin-bottom:14px;}
+.about-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px;}
+.astat{background:var(--cream);border-radius:12px;padding:14px 10px;text-align:center;border:1px solid var(--gray4);}
+.astat-icon{font-size:1.2rem;color:var(--gold-dark);display:block;margin-bottom:4px;}
+.astat-label{font-size:.62rem;color:var(--gray);text-transform:uppercase;letter-spacing:1px;}
+
+/* ── BOOKING ── */
+.booking-section{background:linear-gradient(160deg,var(--dark) 0%,var(--dark2) 100%);padding:80px 40px;position:relative;overflow:hidden;}
+.booking-section::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(201,146,42,.04) 1px,transparent 1px);background-size:32px 32px;}
+.booking-inner{max-width:680px;margin:0 auto;text-align:center;position:relative;}
+.booking-section .eyebrow{color:var(--gold2);}
+.booking-section .section-title{color:var(--white);}
+.booking-section .section-title em{color:var(--gold2);}
+.booking-steps{display:flex;gap:12px;margin:32px 0;flex-wrap:wrap;justify-content:center;}
+.bstep{background:rgba(255,255,255,.04);border:1px solid rgba(201,146,42,.12);border-radius:16px;padding:18px 16px;flex:1;min-width:140px;text-align:center;}
+.bstep-num{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--gold2);display:block;font-style:italic;}
+.bstep-text{font-size:.76rem;color:rgba(255,255,255,.45);margin-top:5px;line-height:1.4;}
+.booksy-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--dark);border:none;border-radius:50px;padding:16px 38px;font-size:.95rem;font-weight:700;cursor:pointer;box-shadow:0 8px 28px rgba(201,146,42,.3);transition:all .2s;font-family:'Inter',sans-serif;}
+.booksy-btn:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(201,146,42,.4);}
+.booking-note{font-size:.75rem;color:rgba(255,255,255,.35);margin-top:16px;line-height:1.6;}
+
+/* ── SNACKS CTA ── */
+.snacks-cta{background:linear-gradient(135deg,var(--col-y) 0%,#FFE060 100%);padding:72px 40px;text-align:center;position:relative;overflow:hidden;}
+.snacks-cta::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,rgba(0,0,0,.05),transparent);}
+.snacks-cta h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.8rem);color:var(--dark2);font-weight:600;margin-bottom:10px;position:relative;font-style:italic;}
+.snacks-cta p{color:rgba(13,10,6,.6);font-size:.92rem;margin-bottom:28px;position:relative;}
+.snacks-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;}
+.snack-btn{display:inline-flex;align-items:center;gap:8px;border-radius:50px;padding:13px 26px;font-size:.88rem;font-weight:700;color:white;text-decoration:none;transition:all .2s;border:none;cursor:pointer;font-family:'Inter',sans-serif;}
+.snack-btn:hover{transform:translateY(-2px);}
+
+/* ── CONTACT ── */
+.contact-section{background:var(--dark2);padding:64px 40px;}
+.contact-wrap{max-width:800px;margin:0 auto;text-align:center;}
+.contact-section .eyebrow{color:var(--gold2);}
+.contact-section .section-title{color:var(--white);}
+.contact-section .section-title em{color:var(--gold2);}
+.contact-section .section-sub{color:rgba(255,255,255,.35);margin:0 auto 36px;}
+.contact-pills{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+.contact-pill{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(201,146,42,.15);color:rgba(255,255,255,.75);border-radius:50px;padding:11px 22px;text-decoration:none;font-size:.84rem;transition:all .25s;}
+.contact-pill:hover{background:rgba(201,146,42,.1);border-color:var(--gold2);transform:translateY(-2px);}
+.contact-pill i{color:var(--gold2);font-size:.85rem;}
+
+/* ── FOOTER ── */
+footer{background:var(--dark);padding:0 0 28px;}
+.footer-inner{max-width:1100px;margin:0 auto;padding:44px 40px 0;}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-style:italic;color:var(--gold2);margin-bottom:8px;}
+.footer-brand span{font-style:normal;color:var(--white);}
+.footer-tagline{font-size:.76rem;color:rgba(255,255,255,.3);line-height:1.7;}
+.footer-col h4{font-size:.67rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold2);margin-bottom:14px;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:8px;}
+.footer-col ul li button{background:none;border:none;color:rgba(255,255,255,.45);font-size:.8rem;cursor:pointer;font-family:'Inter',sans-serif;transition:color .2s;padding:0;display:flex;align-items:center;gap:7px;}
+.footer-col ul li button i{font-size:.7rem;color:var(--gold2);}
+.footer-col ul li button:hover{color:var(--gold2);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-legal{font-size:.7rem;color:rgba(255,255,255,.2);line-height:1.7;}
+.footer-love{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold2);font-size:.82rem;display:flex;align-items:center;gap:6px;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--dark);color:var(--gold2);border:1px solid rgba(201,146,42,.3);padding:10px 24px;border-radius:50px;font-size:.83rem;font-weight:600;z-index:600;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(13,10,6,.3);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── LANG ── */
+[data-es]{display:none;}
+body.es [data-en]{display:none;}
+body.es [data-es]{display:block;}
+body.es span[data-es]{display:inline;}
+body.es span[data-en]{display:none;}
+
+@media(max-width:768px){
+  .navbar{padding:0 16px;}
+  .nav-links{display:none;}
+  .nav-links.open{display:flex;flex-direction:column;position:fixed;top:68px;left:0;right:0;background:var(--dark);padding:16px;gap:4px;border-bottom:1px solid rgba(201,146,42,.15);}
+  .hamburger{display:block;}
+  .hero{padding:80px 20px 60px;}
+  section{padding:60px 20px;}
+  .booking-section{padding:60px 20px;}
+  .snacks-cta{padding:56px 20px;}
+  .contact-section{padding:56px 20px;}
+  .about-wrap{grid-template-columns:1fr;}
+  .about-text-panel{padding:32px 24px;}
+  .about-stats{grid-template-columns:repeat(2,1fr);}
+  .footer-inner{padding:36px 20px 0;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:24px;}
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h3><i class="fa-solid fa-bag-shopping"></i> <span data-en>Your Cart</span><span data-es>Tu Carrito</span></h3>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="col-stripe"><span style="background:var(--col-y)"></span><span style="background:var(--col-b)"></span><span style="background:var(--col-r)"></span></div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty" id="cartEmpty">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <p data-en>Your cart is empty.<br/>Add services or snacks to begin.</p>
+      <p data-es>Tu carrito está vacío.<br/>Agrega servicios o antojos para comenzar.</p>
+    </div>
+  </div>
+  <div class="cart-foot" id="cartFoot" style="display:none;">
+    <div class="cart-total-row">
+      <span data-en>Total</span><span data-es>Total</span>
+      <span class="cart-total-amt" id="cartTotal">$0</span>
+    </div>
+    <div class="pay-label" data-en>Choose how to pay:</div>
+    <div class="pay-label" data-es>Elige cómo pagar:</div>
+    <div class="pay-btns">
+      <button class="pay-btn-cart" style="background:linear-gradient(135deg,#00A86B,#007A4D);" onclick="checkout('square')"><i class="fa-solid fa-credit-card"></i> <span data-en>Pay with Square (Card)</span><span data-es>Pagar con Square</span></button>
+      <button class="pay-btn-cart" style="background:linear-gradient(135deg,#6B1BE3,#4A0AA0);" onclick="checkout('zelle')"><i class="fa-solid fa-bolt"></i> <span data-en>Pay with Zelle</span><span data-es>Pagar con Zelle</span></button>
+      <button class="pay-btn-cart" style="background:linear-gradient(135deg,#008CFF,#005FCC);" onclick="checkout('venmo')"><i class="fa-solid fa-money-bill-transfer"></i> <span data-en>Pay with Venmo</span><span data-es>Pagar con Venmo</span></button>
+      <button class="pay-btn-cart" style="background:linear-gradient(135deg,#25D366,#128C47);" onclick="checkout('whatsapp')"><i class="fa-brands fa-whatsapp"></i> <span data-en>Send Order via WhatsApp</span><span data-es>Enviar por WhatsApp</span></button>
+    </div>
+    <p style="font-size:.72rem;color:var(--gray);margin-top:10px;text-align:center;" data-en>Beauty appointments require booking on Booksy after payment.</p>
+    <p style="font-size:.72rem;color:var(--gray);margin-top:10px;text-align:center;" data-es>Las citas de belleza requieren reserva en Booksy después del pago.</p>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand" onclick="scrollTo('#home')">Marly's <span>✦</span></div>
+  <div class="nav-links" id="navLinks">
+    <button class="nav-btn" onclick="scrollTo('#services')" data-en>Services</button>
+    <button class="nav-btn" onclick="scrollTo('#services')" data-es>Servicios</button>
+    <button class="nav-btn" onclick="scrollTo('#about')" data-en>About</button>
+    <button class="nav-btn" onclick="scrollTo('#about')" data-es>Sobre Mí</button>
+    <button class="nav-btn" onclick="scrollTo('#booking')" data-en>Book</button>
+    <button class="nav-btn" onclick="scrollTo('#booking')" data-es>Reservar</button>
+    <button class="nav-btn" onclick="scrollTo('#contact')" data-en>Contact</button>
+    <button class="nav-btn" onclick="scrollTo('#contact')" data-es>Contacto</button>
+    <button class="nav-btn nav-lang" onclick="toggleLang()"><span id="langFlag">🇨🇴</span> <span id="langText">ES</span></button>
+    <button class="nav-btn nav-cart" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i> <span data-en>Cart</span><span data-es>Carrito</span><span class="cart-badge" id="cartBadge">0</span></button>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow"><i class="fa-solid fa-location-dot"></i> <span data-en>Tulsa's Afro-Colombian Beauty & Bites</span><span data-es>Belleza Afro-Colombiana y Antojos en Tulsa</span></div>
+    <h1>Marly's<br/><em>Beauty & Bites</em></h1>
+    <div class="hero-divider"><span></span><i class="fa-solid fa-star"></i><span></span></div>
+    <p class="hero-sub" data-en>Nails · Hair Braiding · Colombian Snacks · Tulsa, Oklahoma</p>
+    <p class="hero-sub" data-es>Uñas · Trenzas · Antojos Colombianos · Tulsa, Oklahoma</p>
+    <p class="hero-tagline" data-en>"Where culture, care & flavor meet."</p>
+    <p class="hero-tagline" data-es>"Donde la cultura, el cuidado y el sabor se encuentran."</p>
+    <div class="hero-btns">
+      <button class="btn-gold" onclick="scrollTo('#booking')"><i class="fa-solid fa-calendar-check"></i> <span data-en>Book Appointment</span><span data-es>Reservar Cita</span></button>
+      <button class="btn-outline-gold" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i> <span data-en>View Cart</span><span data-es>Ver Carrito</span></button>
+    </div>
+    <div class="hero-features">
+      <div class="hero-feat"><i class="fa-solid fa-check"></i><span data-en>Afro-Colombian</span><span data-es>Afro-Colombiana</span></div>
+      <div class="hero-feat"><i class="fa-solid fa-check"></i><span data-en>Bilingual EN/ES</span><span data-es>Bilingüe EN/ES</span></div>
+      <div class="hero-feat"><i class="fa-solid fa-check"></i><span data-en>Tulsa, OK</span><span data-es>Tulsa, OK</span></div>
+    </div>
+  </div>
+  <div class="hero-flag"><span style="background:var(--col-y)"></span><span style="background:var(--col-b)"></span><span style="background:var(--col-r)"></span></div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" style="background:var(--ivory);">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow" data-en>✦ What I Offer</span>
+      <span class="eyebrow" data-es>✦ Lo Que Ofrezco</span>
+      <h2 class="section-title" data-en>Services & <em>Pricing</em></h2>
+      <h2 class="section-title" data-es>Servicios & <em>Precios</em></h2>
+      <div class="gold-rule"><span></span><i class="fa-solid fa-star"></i><span></span></div>
+      <p class="section-sub" data-en>Tulsa-fair prices. Premium results. Add to cart and pay your way.</p>
+      <p class="section-sub" data-es>Precios justos. Resultados de primera. Agrega al carrito y paga como quieras.</p>
+    </div>
+    <div class="services-grid" style="margin-top:40px;">
+
+      <!-- NAILS -->
+      <div class="svc-card">
+        <div class="svc-card-head nails">
+          <div class="svc-icon-wrap"><i class="fa-solid fa-hand-sparkles"></i></div>
+          <h3 data-en>Nail Services</h3><h3 data-es>Servicios de Uñas</h3>
+          <p data-en>Gel · Acrylics · Nail Art · Pedicures</p><p data-es>Gel · Acrílico · Arte · Pedicura</p>
+        </div>
+        <div class="svc-body">
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Basic Manicure</span><span data-es>Manicura Básica</span><small data-en>Trim, shape & polish</small><small data-es>Corte, forma y esmalte</small></div></div><div class="price-right"><span class="price-tag pt-b">$25</span><button class="add-btn ab" onclick="addToCart('hand-sparkles','Basic Manicure',25)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Gel Manicure</span><span data-es>Manicura en Gel</span><small data-en>Long-lasting, no chips</small><small data-es>Duradero, sin desprendimiento</small></div></div><div class="price-right"><span class="price-tag pt-b">$40</span><button class="add-btn ab" onclick="addToCart('hand-sparkles','Gel Manicure',40)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Acrylic Full Set</span><span data-es>Juego Completo Acrílico</span><small data-en>Custom shape & length</small><small data-es>Forma y largo personalizado</small></div></div><div class="price-right"><span class="price-tag pt-b">$55</span><button class="add-btn ab" onclick="addToCart('hand-sparkles','Acrylic Full Set',55)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Acrylic Fill</span><span data-es>Relleno Acrílico</span><small data-en>Every 2–3 weeks</small><small data-es>Cada 2–3 semanas</small></div></div><div class="price-right"><span class="price-tag pt-b">$35</span><button class="add-btn ab" onclick="addToCart('hand-sparkles','Acrylic Fill',35)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Classic Pedicure</span><span data-es>Pedicura Clásica</span><small data-en>Soak, trim & polish</small><small data-es>Remojo, corte y esmalte</small></div></div><div class="price-right"><span class="price-tag pt-b">$40</span><button class="add-btn ab" onclick="addToCart('hand-sparkles','Classic Pedicure',40)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Nail Art (per nail)</span><span data-es>Arte de Uñas (por uña)</span><small data-en>Custom designs, gems, foils</small><small data-es>Diseños, piedras, láminas</small></div></div><div class="price-right"><span class="price-tag pt-b">$5+</span><button class="add-btn ab" onclick="addToCart('hand-sparkles','Nail Art',5)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="svc-pay-note"><i class="fa-solid fa-circle-info"></i><span data-en>Book & pay by card on Booksy, or send a deposit via Zelle/Venmo to hold your spot.</span><span data-es>Reserva y paga con tarjeta en Booksy, o envía depósito por Zelle/Venmo.</span></div>
+          <div class="svc-cta">
+            <button class="svc-cta-btn" style="background:linear-gradient(135deg,var(--col-b),#0050CC);" onclick="window.open('https://booksy.com','_blank')"><i class="fa-solid fa-calendar-check"></i> <span data-en>Book on Booksy</span><span data-es>Reservar</span></button>
+            <button class="svc-cta-btn" style="background:linear-gradient(135deg,var(--dark),var(--brown));" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i> <span data-en>Cart</span><span data-es>Carrito</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BRAIDING -->
+      <div class="svc-card">
+        <div class="svc-card-head braids">
+          <div class="svc-icon-wrap"><i class="fa-solid fa-scissors"></i></div>
+          <h3 data-en>Hair Braiding</h3><h3 data-es>Trenzas</h3>
+          <p data-en>Box Braids · Cornrows · Twists · Locs</p><p data-es>Box Braids · Cornrows · Twists · Locs</p>
+        </div>
+        <div class="svc-body">
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Cornrows (simple)</span><span data-es>Cornrows (simples)</span><small data-en>Back to front, natural hair</small><small data-es>De atrás hacia adelante</small></div></div><div class="price-right"><span class="price-tag pt-r">$65</span><button class="add-btn ar" onclick="addToCart('scissors','Cornrows',65)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Box Braids</span><span data-es>Box Braids</span><small data-en>Medium size, hip length</small><small data-es>Tamaño mediano, largo cadera</small></div></div><div class="price-right"><span class="price-tag pt-r">$175</span><button class="add-btn ar" onclick="addToCart('scissors','Box Braids',175)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Knotless Braids</span><span data-es>Knotless Braids</span><small data-en>Lightweight, protective style</small><small data-es>Liviano, estilo protector</small></div></div><div class="price-right"><span class="price-tag pt-r">$210</span><button class="add-btn ar" onclick="addToCart('scissors','Knotless Braids',210)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Senegalese Twists</span><span data-es>Twists Senegaleses</span><small data-en>Silky, elegant finish</small><small data-es>Acabado sedoso y elegante</small></div></div><div class="price-right"><span class="price-tag pt-r">$165</span><button class="add-btn ar" onclick="addToCart('scissors','Senegalese Twists',165)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Loc Retwist</span><span data-es>Retorcido de Locs</span><small data-en>Maintain & refresh locs</small><small data-es>Mantenimiento y refresco</small></div></div><div class="price-right"><span class="price-tag pt-r">$95</span><button class="add-btn ar" onclick="addToCart('scissors','Loc Retwist',95)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Kids Braids (under 12)</span><span data-es>Trenzas Niñas (menores 12)</span><small data-en>Gentle, quick styles</small><small data-es>Estilos suaves y rápidos</small></div></div><div class="price-right"><span class="price-tag pt-r">$55</span><button class="add-btn ar" onclick="addToCart('scissors','Kids Braids',55)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="svc-pay-note"><i class="fa-solid fa-circle-info"></i><span data-en>Book & pay by card on Booksy, or send a deposit via Zelle/Venmo to hold your spot.</span><span data-es>Reserva y paga con tarjeta en Booksy, o envía depósito por Zelle/Venmo.</span></div>
+          <div class="svc-cta">
+            <button class="svc-cta-btn" style="background:linear-gradient(135deg,var(--col-r),#FF3050);" onclick="window.open('https://booksy.com','_blank')"><i class="fa-solid fa-calendar-check"></i> <span data-en>Book on Booksy</span><span data-es>Reservar</span></button>
+            <button class="svc-cta-btn" style="background:linear-gradient(135deg,var(--dark),var(--brown));" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i> <span data-en>Cart</span><span data-es>Carrito</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SNACKS -->
+      <div class="svc-card">
+        <div class="svc-card-head snacks">
+          <div class="svc-icon-wrap"><i class="fa-solid fa-bowl-food"></i></div>
+          <h3 data-en>Colombian Snacks</h3><h3 data-es>Antojos Colombianos</h3>
+          <p data-en>Made fresh · Order ahead required</p><p data-es>Hecho fresco · Pedido anticipado</p>
+        </div>
+        <div class="svc-body">
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Empanadas (each)</span><span data-es>Empanadas (cada una)</span><small data-en>Beef or chicken, crispy corn dough</small><small data-es>Carne o pollo, masa crujiente</small></div></div><div class="price-right"><span class="price-tag pt-g">$4</span><button class="add-btn ag" onclick="addToCart('bowl-food','Empanada',4)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Arepas con Queso</span><span data-es>Arepas con Queso</span><small data-en>Grilled corn cake with cheese</small><small data-es>Arepa de maíz con queso</small></div></div><div class="price-right"><span class="price-tag pt-g">$5</span><button class="add-btn ag" onclick="addToCart('bowl-food','Arepa con Queso',5)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Pandebono (3 pack)</span><span data-es>Pandebono (3 pack)</span><small data-en>Warm cheese bread rolls</small><small data-es>Panecillos de queso calientes</small></div></div><div class="price-right"><span class="price-tag pt-g">$8</span><button class="add-btn ag" onclick="addToCart('bowl-food','Pandebono (3 pack)',8)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Buñuelos (4 pack)</span><span data-es>Buñuelos (4 pack)</span><small data-en>Fluffy fried cheese puffs</small><small data-es>Buñuelos esponjosos de queso</small></div></div><div class="price-right"><span class="price-tag pt-g">$9</span><button class="add-btn ag" onclick="addToCart('bowl-food','Buñuelos (4 pack)',9)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Snack Party Pack</span><span data-es>Paquete Fiesta Antojo</span><small data-en>6 empanadas + arepas + pandebono</small><small data-es>6 empanadas + arepas + pandebono</small></div></div><div class="price-right"><span class="price-tag pt-g">$28</span><button class="add-btn ag" onclick="addToCart('bowl-food','Snack Party Pack',28)">+ <span data-en>Add</span><span data-es>Agregar</span></button></div></div>
+          <div class="price-row"><div class="price-info"><div class="price-name"><span data-en>Custom Snack Box</span><span data-es>Caja Personalizada</span><small data-en>Events, parties, office orders</small><small data-es>Eventos, fiestas, oficina</small></div></div><div class="price-right"><span class="price-tag pt-g">DM</span><a href="https://wa.me/19185550000" target="_blank" class="add-btn ag"><i class="fa-brands fa-whatsapp"></i> DM</a></div></div>
+          <div class="svc-pay-note"><i class="fa-solid fa-circle-info"></i><span data-en>WhatsApp your order → Pay via Zelle or Venmo → Pick up fresh!</span><span data-es>Escribe tu pedido → Paga por Zelle o Venmo → ¡Recoge fresquito!</span></div>
+          <div class="svc-cta">
+            <button class="svc-cta-btn" style="background:linear-gradient(135deg,#25D366,#128C47);" onclick="window.open('https://wa.me/19185550000?text=Hola%20Marly!','_blank')"><i class="fa-brands fa-whatsapp"></i> <span data-en>WhatsApp Order</span><span data-es>Pedir por WhatsApp</span></button>
+            <button class="svc-cta-btn" style="background:linear-gradient(135deg,var(--dark),var(--brown));" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i> <span data-en>Cart</span><span data-es>Carrito</span></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FLAG DIVIDER -->
+<div style="display:flex;height:5px;"><span style="flex:1;background:var(--col-y)"></span><span style="flex:1;background:var(--col-b)"></span><span style="flex:1;background:var(--col-r)"></span></div>
+
+<!-- ABOUT -->
+<section id="about" style="background:var(--cream);">
+  <div class="container">
+    <div class="about-wrap">
+      <div class="about-photo">
+        <div class="about-photo-placeholder">
+          <i class="fa-solid fa-user"></i>
+          <p data-en>Marly's photo</p>
+          <p data-es>Foto de Marly</p>
+        </div>
+        <div class="about-flag-tag"><i class="fa-solid fa-location-dot"></i> Tulsa, Oklahoma 🇨🇴</div>
+      </div>
+      <div class="about-text-panel">
+        <div class="about-badges">
+          <span class="abadge ab-gold">Afro-Colombian</span>
+          <span class="abadge ab-blue">Tulsa, OK</span>
+          <span class="abadge ab-gold">Bilingual EN/ES</span>
+          <span class="abadge ab-red">Nail Artist</span>
+        </div>
+        <span class="eyebrow">✦ <span data-en>About Marly</span><span data-es>Sobre Marly</span></span>
+        <h2 class="section-title" data-en>Hi, I'm <em>Marly</em> 👋🏾</h2>
+        <h2 class="section-title" data-es>Hola, Soy <em>Marly</em> 👋🏾</h2>
+        <p data-en>I'm a proud Afro-Colombian woman bringing beauty, culture, and flavor from Colombia to the heart of Tulsa, Oklahoma. Whether you're in my chair for braids or ordering empanadas — you're family.</p>
+        <p data-es>Soy una orgullosa mujer afro-colombiana que trae belleza, cultura y sabor desde Colombia al corazón de Tulsa. Ya sea en mi silla para trenzas o pidiendo empanadas — eres familia.</p>
+        <p data-en>Years of experience in natural hair care, nail artistry, and authentic Colombian cooking. Bilingual in English & Spanish — all communities welcome.</p>
+        <p data-es>Años de experiencia en cuidado capilar, arte en uñas y cocina colombiana auténtica. Bilingüe — todas las comunidades son bienvenidas.</p>
+        <div class="about-stats">
+          <div class="astat"><span class="astat-icon"><i class="fa-solid fa-hand-sparkles"></i></span><span class="astat-label" data-en>Nail Artist</span><span class="astat-label" data-es>Artista</span></div>
+          <div class="astat"><span class="astat-icon"><i class="fa-solid fa-scissors"></i></span><span class="astat-label" data-en>Braider</span><span class="astat-label" data-es>Trenzadora</span></div>
+          <div class="astat"><span class="astat-icon"><i class="fa-solid fa-bowl-food"></i></span><span class="astat-label" data-en>Chef</span><span class="astat-label" data-es>Chef</span></div>
+          <div class="astat"><span class="astat-icon">🇨🇴</span><span class="astat-label" data-en>Afro-Colombian</span><span class="astat-label" data-es>Afro-Colombiana</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLAG DIVIDER -->
+<div style="display:flex;height:5px;"><span style="flex:1;background:var(--col-y)"></span><span style="flex:1;background:var(--col-b)"></span><span style="flex:1;background:var(--col-r)"></span></div>
+
+<!-- BOOKING -->
+<div class="booking-section" id="booking">
+  <div class="booking-inner">
+    <span class="eyebrow" data-en>✦ Ready to Glow?</span>
+    <span class="eyebrow" data-es>✦ ¿Lista para Brillar?</span>
+    <h2 class="section-title" data-en>Book Your <em>Appointment</em></h2>
+    <h2 class="section-title" data-es>Reserva Tu <em>Cita</em></h2>
+    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:8px;" data-en>All beauty appointments booked through Booksy — free, fast, automatic reminders.</p>
+    <p style="color:rgba(255,255,255,.5);font-size:.9rem;margin-top:8px;" data-es>Todas las citas se reservan por Booksy — gratis, rápido, recordatorios automáticos.</p>
+    <div class="booking-steps">
+      <div class="bstep"><span class="bstep-num">1</span><div class="bstep-text" data-en>Click Book Now below</div><div class="bstep-text" data-es>Haz clic en Reservar</div></div>
+      <div class="bstep"><span class="bstep-num">2</span><div class="bstep-text" data-en>Choose service & time</div><div class="bstep-text" data-es>Elige servicio y hora</div></div>
+      <div class="bstep"><span class="bstep-num">3</span><div class="bstep-text" data-en>Get confirmation + reminder</div><div class="bstep-text" data-es>Recibe confirmación</div></div>
+    </div>
+    <button class="booksy-btn" onclick="window.open('https://booksy.com','_blank')"><i class="fa-solid fa-calendar-check"></i> <span data-en>Book Now on Booksy</span><span data-es>Reservar en Booksy</span></button>
+    <p class="booking-note" data-en>💡 No Booksy? DM on Instagram or WhatsApp to book directly.</p>
+    <p class="booking-note" data-es>💡 ¿Sin Booksy? Escribe por Instagram o WhatsApp para reservar.</p>
+  </div>
+</div>
+
+<!-- SNACKS CTA -->
+<div class="snacks-cta">
+  <h2 data-en>"Craving Something <em style="font-family:'Cormorant Garamond',serif;">Colombian?</em>"</h2>
+  <h2 data-es>"¿Antojo de Algo <em style="font-family:'Cormorant Garamond',serif;">Colombiano?</em>"</h2>
+  <p data-en>Empanadas, arepas, pandebono & more — made fresh with love. Add to cart or order directly!</p>
+  <p data-es>Empanadas, arepas, pandebono y más — hecho con amor. ¡Agrega al carrito o pide directamente!</p>
+  <div class="snacks-btns">
+    <button class="snack-btn" style="background:linear-gradient(135deg,var(--col-b),#0050CC);" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i> <span data-en>View Cart</span><span data-es>Ver Carrito</span></button>
+    <a href="https://wa.me/19185550000?text=Hola%20Marly!%20Quiero%20ordenar%20antojos" target="_blank" class="snack-btn" style="background:linear-gradient(135deg,#25D366,#128C47);"><i class="fa-brands fa-whatsapp"></i> <span data-en>Order on WhatsApp</span><span data-es>Pedir por WhatsApp</span></a>
+    <a href="https://venmo.com/marlybeautybites" target="_blank" class="snack-btn" style="background:linear-gradient(135deg,#008CFF,#005FCC);"><i class="fa-solid fa-money-bill-transfer"></i> Venmo</a>
+    <a href="https://enroll.zellepay.com" target="_blank" class="snack-btn" style="background:linear-gradient(135deg,#6B1BE3,#4A0AA0);"><i class="fa-solid fa-bolt"></i> Zelle</a>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="contact-section" id="contact">
+  <div class="contact-wrap">
+    <span class="eyebrow">✦ <span data-en>Find Marly</span><span data-es>Encuéntrame</span></span>
+    <h2 class="section-title" data-en>Let's <em>Connect</em></h2>
+    <h2 class="section-title" data-es><em>Contáctame</em></h2>
+    <p class="section-sub" data-en>Based in Tulsa, Oklahoma · Home studio & mobile available</p>
+    <p class="section-sub" data-es>Basada en Tulsa, Oklahoma · Estudio en casa y móvil disponible</p>
+    <div class="contact-pills">
+      <a href="https://booksy.com" target="_blank" class="contact-pill"><i class="fa-solid fa-calendar-check"></i> Booksy</a>
+      <a href="https://wa.me/19185550000" target="_blank" class="contact-pill"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+      <a href="https://instagram.com/marlybeautybites" target="_blank" class="contact-pill"><i class="fa-brands fa-instagram"></i> @marlybeautybites</a>
+      <a href="mailto:marlybeautybites@gmail.com" class="contact-pill"><i class="fa-solid fa-envelope"></i> Email Marly</a>
+      <a href="#" class="contact-pill"><i class="fa-solid fa-location-dot"></i> Tulsa, OK</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Marly's <span>Beauty & Bites</span></div>
+        <div class="footer-tagline">"Where culture, care & flavor meet."<br/>Nails · Braids · Colombian Snacks<br/>Tulsa, Oklahoma 🇨🇴</div>
+      </div>
+      <div class="footer-col"><h4 data-en>Services</h4><h4 data-es>Servicios</h4><ul>
+        <li><button onclick="scrollTo('#services')"><i class="fa-solid fa-hand-sparkles"></i><span data-en>Nail Services</span><span data-es>Uñas</span></button></li>
+        <li><button onclick="scrollTo('#services')"><i class="fa-solid fa-scissors"></i><span data-en>Hair Braiding</span><span data-es>Trenzas</span></button></li>
+        <li><button onclick="scrollTo('#services')"><i class="fa-solid fa-bowl-food"></i><span data-en>Colombian Snacks</span><span data-es>Antojos</span></button></li>
+      </ul></div>
+      <div class="footer-col"><h4 data-en>Book & Pay</h4><h4 data-es>Reservar y Pagar</h4><ul>
+        <li><button onclick="scrollTo('#booking')"><i class="fa-solid fa-calendar-check"></i><span data-en>Book on Booksy</span><span data-es>Reservar en Booksy</span></button></li>
+        <li><button onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i><span data-en>View Cart</span><span data-es>Ver Carrito</span></button></li>
+        <li><button onclick="window.open('https://venmo.com/marlybeautybites','_blank')"><i class="fa-solid fa-money-bill-transfer"></i>Venmo / Zelle</button></li>
+      </ul></div>
+      <div class="footer-col"><h4 data-en>Connect</h4><h4 data-es>Contacto</h4><ul>
+        <li><button onclick="window.open('https://instagram.com/marlybeautybites','_blank')"><i class="fa-brands fa-instagram"></i>@marlybeautybites</button></li>
+        <li><button onclick="window.open('https://wa.me/19185550000','_blank')"><i class="fa-brands fa-whatsapp"></i>WhatsApp</button></li>
+        <li><button onclick="scrollTo('#contact')"><i class="fa-solid fa-location-dot"></i>Tulsa, OK</button></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-legal">© 2025 Marly's Beauty & Bites · Tulsa, Oklahoma</div>
+      <div class="footer-love"><i class="fa-solid fa-star"></i> Made with 🇨🇴 love</div>
+    </div>
+  </div>
+</footer>
+
+<!-- LANG FAB -->
+<button onclick="toggleLang()" style="position:fixed;bottom:24px;left:24px;z-index:300;background:linear-gradient(135deg,var(--col-b),#0050CC);color:white;border:none;border-radius:50px;padding:10px 18px;font-size:.82rem;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(0,56,147,.35);display:flex;align-items:center;gap:8px;transition:all .2s;font-family:'Inter',sans-serif;">
+  <span id="fabFlag">🇨🇴</span> <span id="fabText">Switch to Español</span>
+</button>
+
+<script>
+function scrollTo(id){const el=document.querySelector(id);if(el)el.scrollIntoView({behavior:'smooth'});}
+
+let isES=false;
+function toggleLang(){
+  isES=!isES;
+  document.body.classList.toggle('es',isES);
+  document.getElementById('langFlag').textContent=isES?'🇺🇸':'🇨🇴';
+  document.getElementById('langText').textContent=isES?'EN':'ES';
+  document.getElementById('fabFlag').textContent=isES?'🇺🇸':'🇨🇴';
+  document.getElementById('fabText').textContent=isES?'Switch to English':'Switch to Español';
+}
+
+function toggleMenu(){
+  const m=document.getElementById('navLinks');
+  const b=document.getElementById('hamburger');
+  m.classList.toggle('open');
+  b.textContent=m.classList.contains('open')?'✕':'☰';
+}
+
+let cart=[];
+function addToCart(icon,name,price){
+  const ex=cart.find(i=>i.name===name);
+  if(ex){ex.qty++;}else{cart.push({icon,name,price,qty:1});}
+  renderCart();
+  showToast(isES?'✦ ¡Agregado al carrito!':'✦ Added to cart!');
+}
+function removeFromCart(idx){cart.splice(idx,1);renderCart();}
+function changeQty(idx,delta){cart[idx].qty+=delta;if(cart[idx].qty<=0)cart.splice(idx,1);renderCart();}
+
+function renderCart(){
+  const body=document.getElementById('cartBody');
+  const empty=document.getElementById('cartEmpty');
+  const foot=document.getElementById('cartFoot');
+  const badge=document.getElementById('cartBadge');
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const count=cart.reduce((s,i)=>s+i.qty,0);
+  badge.textContent=count;
+  badge.classList.toggle('show',count>0);
+  document.getElementById('cartTotal').textContent='$'+total;
+  if(!cart.length){empty.style.display='block';foot.style.display='none';body.innerHTML='';body.appendChild(empty);return;}
+  empty.style.display='none';foot.style.display='block';
+  body.innerHTML=cart.map((item,i)=>`
+    <div class="cart-item">
+      <div class="cart-item-icon"><i class="fa-solid fa-${item.icon}"></i></div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">$${item.price} · Subtotal: $${item.price*item.qty}</div>
+      </div>
+      <div class="cart-qty">
+        <button class="qty-btn" onclick="changeQty(${i},-1)">−</button>
+        <span class="qty-n">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
+        <button class="rm-btn" onclick="removeFromCart(${i})"><i class="fa-solid fa-trash-can"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+function toggleCart(){
+  document.getElementById('cartDrawer').classList.toggle('open');
+  document.getElementById('cartOverlay').classList.toggle('open');
+}
+
+function checkout(method){
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const items=cart.map(i=>`${i.qty}x ${i.name}`).join(', ');
+  const msg=encodeURIComponent(`Hola Marly! 🌺 Order: ${items}. Total: $${total}`);
+  if(method==='square')window.open('https://squareup.com/pay','_blank');
+  else if(method==='zelle')window.open('https://enroll.zellepay.com','_blank');
+  else if(method==='venmo')window.open('https://venmo.com/marlybeautybites','_blank');
+  else if(method==='whatsapp')window.open(`https://wa.me/19185550000?text=${msg}`,'_blank');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+renderCart();
+</script>
+</body>
+</html>
